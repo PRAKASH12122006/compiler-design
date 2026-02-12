@@ -1,0 +1,35 @@
+#include <stdio.h>
+#include <ctype.h>
+#include <stdlib.h>
+
+char input[100];
+int pos = 0;
+
+void E(), Ep(), T(), Tp(), F();
+
+void match(char c) {
+    if (input[pos] == c) pos++;
+    else { printf("Rejected\n"); exit(1); }
+}
+
+void E() { T(); Ep(); }
+void Ep() { if (input[pos] == '+') { match('+'); T(); Ep(); } }
+void T() { F(); Tp(); }
+void Tp() { if (input[pos] == '*') { match('*'); F(); Tp(); } }
+void F() {
+    if (input[pos] == '(') { match('('); E(); match(')'); }
+    else if (isalpha(input[pos])) match(input[pos]); // id
+    else { printf("Rejected\n"); exit(1); }
+}
+
+int main() {
+    printf("Enter input string: ");
+    scanf("%s", input);
+
+    E();
+
+    if (input[pos] == '\0') printf("Accepted: input string satisfies the grammar.\n");
+    else printf("Rejected: extra symbols at the end.\n");
+
+    return 0;
+}
